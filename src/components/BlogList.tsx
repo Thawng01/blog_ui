@@ -15,7 +15,7 @@ const BlogList = () => {
             try {
                 setLoading(true);
                 const result = await apiClient.get("blogs/" + user?.email);
-                setBlogs(result.data.blogs);
+                setBlogs(result.data.data);
             } catch (error) {
                 setError("The error occurred while fetching the data.");
             } finally {
@@ -54,6 +54,7 @@ const BlogList = () => {
                         title={blog.title}
                         desc={blog.description}
                         createdAt={blog.created_at}
+                        author={blog.user.name}
                         onDeleteItem={() => handleDelete(blog.id)}
                     />
                 ))}

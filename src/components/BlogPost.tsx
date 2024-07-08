@@ -6,10 +6,18 @@ interface Props {
     title: string;
     desc: string;
     createdAt: string;
+    author: string;
     onDeleteItem: () => void;
 }
 
-const BlogPost = ({ createdAt, id, title, desc, onDeleteItem }: Props) => {
+const BlogPost = ({
+    createdAt,
+    id,
+    title,
+    desc,
+    author,
+    onDeleteItem,
+}: Props) => {
     const navigate = useNavigate();
 
     return (
@@ -46,6 +54,10 @@ const BlogPost = ({ createdAt, id, title, desc, onDeleteItem }: Props) => {
             <div className="flex items-center gap-2 text-gray-500">
                 <span>Created at</span>
                 <span>{new Date(createdAt).toDateString()}</span>
+            </div>
+            <div className="flex items-center gap-2 text-gray-500">
+                <span>Author : </span>
+                <span className="text-slate-900">{author}</span>
             </div>
             <p className="mt-2">
                 {desc.slice(0, 70)}
