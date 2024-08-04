@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import apiClient from "../api/apiClient";
 import { Blog } from "../type";
+import { BsEye } from "react-icons/bs";
 
 const BlogDetail = () => {
     const { id } = useParams();
@@ -10,21 +11,31 @@ const BlogDetail = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        const fetchBlog = async () => {
-            try {
-                setLoading(true);
-                const result = await apiClient.get("blogs/details/" + id);
-                setBlog(result.data.blog);
-            } catch (error) {
-                setError("Something went wrong.");
-                // console.log("error : ", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchBlog();
+    const fetchBlog = useCallback(async () => {
+        try {
+            setLoading(true);
+            const result = await apiClient.get("blogs/" + id);
+            setBlog(result.data.blog);
+        } catch (error) {
+            setError("Something went wrong.");
+        } finally {
+            setLoading(false);
+        }
     }, [id]);
+
+    const updateViewCount = useCallback(async () => {
+        try {
+            await apiClient.post("blogs/view/" + id, {});
+        } catch (error) {
+            console.log("error updading : ", error);
+            setError("Something went wrong.");
+        }
+    }, [id]);
+
+    useEffect(() => {
+        updateViewCount();
+        fetchBlog();
+    }, [updateViewCount, fetchBlog]);
 
     let content: any;
     if (loading) {
@@ -40,6 +51,10 @@ const BlogDetail = () => {
                     <span>{new Date(blog.created_at).toDateString()}</span>
                 </div>
                 <p className="mt-2">{blog.description}</p>
+                <div className="flex items-center gap-3 mt-4">
+                    <BsEye />
+                    <p>{blog.view_count}</p>
+                </div>
             </div>
         );
     } else {

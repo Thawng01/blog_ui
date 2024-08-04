@@ -8,7 +8,7 @@ const Navbar = () => {
         <header className="bg-white shadow-sm px-6 py-3 text-white flex justify-between">
             <h1 className="text-2xl text-black">Blog Website</h1>
             {user ? (
-                <AuthenticatedUser name={user.name} />
+                <AuthenticatedUser name={user.user.name} />
             ) : (
                 <div className="flex items-center">
                     <Link

@@ -6,6 +6,7 @@ export default {
             colors: {
                 primary: "#1a75ff",
                 secondary: "#e6e6e6",
+                transparentBg: "rgba(0, 0, 0, 0.2)",
             },
         },
     },

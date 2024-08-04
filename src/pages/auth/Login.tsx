@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
 import FormInput from "../../components/auth/FormInput";
-import { getCookie } from "../../utils";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import Button from "../../components/shared/Button";
 import apiClient from "../../api/apiClient";
+import { getCookie } from "../../utils";
 
 interface LoginFormData {
     email: string;
@@ -33,22 +33,12 @@ const LoginForm = () => {
                 headers: {
                     "X-XSRF-TOKEN": getCookie("XSRF-TOKEN"),
                 },
-                withCredentials: true,
-                withXSRFToken: true,
             });
 
             if (result.data.status === "success") {
-                const { user } = result.data;
-                setUser(user);
+                setUser(result.data);
 
-                localStorage.setItem(
-                    "user",
-                    JSON.stringify({
-                        id: user.id,
-                        name: user.name,
-                        email: user.email,
-                    })
-                );
+                localStorage.setItem("user", JSON.stringify(result.data));
                 navigate("/", { replace: true });
             }
 

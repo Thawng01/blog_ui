@@ -33,9 +33,8 @@ const RegisterForm = () => {
                     Accept: "application/json",
                     "X-XSRF-TOKEN": getCookie("XSRF-TOKEN"),
                 },
-                withCredentials: true,
-                withXSRFToken: true,
             });
+
             const { user } = result.data;
             setUser(user);
             localStorage.setItem(

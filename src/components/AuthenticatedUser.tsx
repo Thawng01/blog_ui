@@ -4,38 +4,54 @@ import Avatar from "./Avatar";
 import LinkButton from "./shared/LinkButton";
 import apiClient from "../api/apiClient";
 import { useAuthContext } from "../hooks/useAuthContext";
+import { useState } from "react";
+import NewCategory from "./NewCategory";
+import { getCookie } from "../utils";
 
 function AuthenticatedUser({ name }: { name: string }) {
     const { setUser } = useAuthContext();
+    const [showModel, setShowModel] = useState<boolean>(false);
 
-    const navigate = useNavigate();
     const handleLogout = async () => {
         try {
-            const result = await apiClient.post(
+            await apiClient.post(
                 "auth/logout",
                 {},
                 {
-                    withXSRFToken: true,
-                    withCredentials: true,
+                    headers: {
+                        Accept: "application/json",
+                        "X-XSRF-TOKEN": getCookie("XSRF-TOKEN"),
+                    },
                 }
             );
-            navigate("/login");
-            if (result.data.status === "success") {
-                setUser(null);
-            }
+
+            setUser(null);
+            localStorage.removeItem("user");
         } catch (error) {
             console.log(error);
         }
     };
 
     return (
-        <div className="flex items-center gap-4">
-            <LinkButton path="blogs/new" label="New Blog" />
-            <Avatar name={name} />
-            <button onClick={handleLogout} className="text-black font-medium">
-                Logout
-            </button>
-        </div>
+        <>
+            <div className="flex items-center gap-4">
+                <LinkButton path="blogs/new" label="New Blog" />
+                <button
+                    className="text-black border p-2 rounded-md"
+                    onClick={() => setShowModel(true)}
+                >
+                    Create Category
+                </button>
+                <Avatar name={name} />
+                <button
+                    onClick={handleLogout}
+                    className="text-black font-medium"
+                >
+                    Logout
+                </button>
+            </div>
+            {showModel && <NewCategory onClose={setShowModel} />}
+        </>
     );
 }
 

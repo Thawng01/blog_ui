@@ -1,14 +1,9 @@
 import React, { createContext, useState } from "react";
-
-interface UserContext {
-    id: number;
-    name: string;
-    email: string;
-}
+import type { AuthUser } from "../type";
 
 export interface AuthContextValue {
-    user: UserContext | null;
-    setUser: React.Dispatch<React.SetStateAction<UserContext | null>>;
+    user: AuthUser | null;
+    setUser: React.Dispatch<React.SetStateAction<AuthUser | null>>;
 }
 
 export const AuthContext = createContext<AuthContextValue | null>(null);
@@ -21,7 +16,7 @@ export const AuthContextProvider = ({
     let userInfo: any;
     const value = localStorage.getItem("user");
     if (value) userInfo = JSON.parse(value);
-    const [user, setUser] = useState<UserContext | null>(userInfo || null);
+    const [user, setUser] = useState<AuthUser | null>(userInfo || null);
 
     return (
         <AuthContext.Provider value={{ user, setUser }}>
